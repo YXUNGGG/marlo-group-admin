@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mongodb"
+  url = env("DATABASE_URL")
+}
+
+// ENUMS
+
+enum Role {
+  editor
+  viewer
+}
+
+enum OrderStatus {
+  Создан
+  В_работе
+  Выполнен
+  Проблема
+}
+
+// MODELS
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  login String @unique
+  name String 
+  role Role @default(viewer)
+  is_blocked Boolean @default(false)
+
+  created_at DateTime @default(now())
+  last_seen_at DateTime @default(now())
+}
+
+model Product {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  title String @unique
+  price Int                       // in rubles(₽)
+  quantity Int? @default(0)       // null = неограничено
+
+  orders Order[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt 
+
+  @@index([created_at])
+}
+
+model Customer {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  total_revenue Int @default(0)   // in rubles(₽)
+  orders_quantity Int @default(0)
+  note String? @default("")
+
+  orders Order[]
+
+  //contacts
+  email String?
+  phone_number String?
+  telegram_username String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt 
+
+  @@index([created_at])
+  @@index([name(type: Text)])
+}
+
+model Order {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  note String? @default("")
+  status OrderStatus @default(Создан)
+
+  customer_id String @db.ObjectId
+  customer Customer @relation(fields: [customer_id], references: [id])
+
+  product_title String @unique
+  product Product @relation(fields: [product_title], references: [title])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt 
+
+  @@index([created_at])
+  @@index([customer_id, created_at])
+}
