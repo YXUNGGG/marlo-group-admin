@@ -44,8 +44,8 @@ export function SalesChartCard({ className, chartConfig, recentOrdersUnresolved 
 
       <CardContent className="px-0 h-[82%]">
         <ChartContainer config={chartConfig} className="h-[105%] w-[101.5%] -m-1.5">
-          <AreaChart accessibilityLayer data={chartData}>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
+          <AreaChart accessibilityLayer data={chartData} className="select-none pointer-events-none">
+            {/* <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} /> */}
             <Area
               dataKey="За неделю"
               type="natural"

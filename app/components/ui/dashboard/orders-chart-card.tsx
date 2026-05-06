@@ -4,21 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ca
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "../chart";
 import { Bar, BarChart, XAxis } from "recharts";
 import { Separator } from "../separator";
-import { Prisma } from "@/generated/prisma/client";
 import { WEEK } from "@/app/lib/constants";
 import { use } from "react";
 import { getRecentOrders } from "@/app/lib/data";
-
-const chartData = [
-  { week: "1 неделя", desktop: 186 },
-  { week: "2 неделя", desktop: 305 },
-  { week: "3 неделя", desktop: 237 },
-  { week: "4 неделя", desktop: 73 },
-  { week: "5 неделя", desktop: 209 },
-  { week: "6 неделя", desktop: 214 },
-  { week: "7 неделя", desktop: 214 },
-  { week: "8 неделя", desktop: 255 }
-];
 
 type OrdersChartCardProps = {
   className: string;

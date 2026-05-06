@@ -18,7 +18,7 @@ export const formatTime = (date: Date): string => {
 
   const daysLater = Math.ceil(Math.abs(new Date().getTime() - date.getTime()) / (1000 * 3600 * 24));
 
-  if (daysLater < 5) return `${daysLater} дней`;
+  if (daysLater < 5) return `${daysLater} дня назад`;
   else return new Intl.DateTimeFormat("ru-RU").format(date);
 
   // let dayEnding;

@@ -1,6 +1,5 @@
 "use client";
 
-import { PagesType } from "@/app/(admin)/layout";
 import { usePathname } from "next/navigation";
 import {
   Breadcrumb,
@@ -14,8 +13,10 @@ import { PAGES } from "@/app/lib/constants";
 
 export function HeaderBreadcrumb() {
   const path = usePathname();
-  const currentPage = PAGES.find(({ href }) => href.includes(path));
-  const crumbs = [currentPage?.category, currentPage?.name].filter(Boolean);
+  const currentPage = PAGES.find(({ href }) => path.includes(href));
+  const lastParam = path.split("/").pop();
+  const idPage = lastParam !== currentPage?.href.slice(1) && lastParam;
+  const crumbs = [currentPage?.category, currentPage?.name, idPage].filter(Boolean);
 
   return (
     <Breadcrumb>

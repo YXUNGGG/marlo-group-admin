@@ -1,8 +1,14 @@
-import { CustomerAggregateArgs, CustomerFindManyArgs, ProductFindManyArgs } from "@/generated/prisma/models";
+import {
+  CustomerAggregateArgs,
+  CustomerFindManyArgs,
+  CustomerOrderByWithRelationInput,
+  ProductFindManyArgs
+} from "@/generated/prisma/models";
 import { prisma } from "./prisma";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 import { MONTH } from "./constants";
 import { auth } from "./auth/auth";
+import { CustopmerParamsType } from "../(admin)/(main)/customers/page";
 
 // user \\
 export const getUser = async () => {
@@ -106,7 +112,6 @@ export const getUsers = async () => {
 };
 
 // orders \\
-
 export const getCreateOrderData = async () => {
   const customers = await prisma.customer.findMany({
     select: {
@@ -118,9 +123,47 @@ export const getCreateOrderData = async () => {
   const products = await prisma.product.findMany({
     select: {
       id: true,
-      title: true
+      title: true,
+      price: true
     }
   });
 
   return { customers, products };
+};
+
+export const getOrderById = async (id: string) => {
+  return await prisma.order.findFirstOrThrow({
+    where: { id },
+    include: {
+      customer: { select: { name: true } },
+      product: { select: { price: true } }
+    }
+  });
+};
+
+// customers \\
+export const getCustomers = async (params?: CustopmerParamsType) => {
+  const order = params?.sort?.split("=");
+  const orderBy = order && ({ [order[0]]: order[1] } as CustomerOrderByWithRelationInput);
+
+  console.log(params?.query);
+
+  return await prisma.customer.findMany({
+    orderBy: orderBy,
+    where: { name: { contains: params?.query } }
+  });
+};
+
+export const getCustomerById = async (id: string) => {
+  return await prisma.customer.findFirstOrThrow({
+    where: { id },
+    include: {
+      orders: {
+        include: {
+          customer: { select: { name: true } },
+          product: { select: { price: true } }
+        }
+      }
+    }
+  });
 };
