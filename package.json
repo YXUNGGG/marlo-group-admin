@@ -1,11 +1,11 @@
 {
   "name": "marlo-group-admin",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "type": "module",
   "private": false,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",

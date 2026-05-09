@@ -1,9 +1,7 @@
-'use client';
+"use client";
+
+import { ErrorCard } from "@/app/components/ui/.custom/error-card";
 
 export default function Error() {
-  return (
-    <div>
-      Oops, Error
-    </div>
-  );
+  return <ErrorCard />;
 }
