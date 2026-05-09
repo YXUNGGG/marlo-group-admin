@@ -27,7 +27,8 @@
     "**/*.tsx",
     "app/lib/auth/next-env.d.ts",
     ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    "app/components/ui/.custom/*.tsx"
   ],
   "exclude": ["node_modules"]
 }

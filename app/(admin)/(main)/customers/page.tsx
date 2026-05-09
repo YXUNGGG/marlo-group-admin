@@ -1,20 +1,16 @@
-import { Card } from "@/app/components/ui/card";
-import { CustomerFilter } from "@/app/components/ui/customer/customer-filter";
-import { CustomerList } from "@/app/components/ui/customer/customer-list";
+import { Card, CardAction } from "@/app/components/ui/card";
+import { CardBottomGradient } from "@/app/components/ui/.custom/card-bottom-gradient";
 import { CustomerSkeleton } from "@/app/components/ui/customer/customer-skeleton";
 
 import { Suspense } from "react";
+import { CardFilters, CardParamsType } from "@/app/components/ui/.custom/card-filters";
+import { CreateCustomerModal } from "@/app/components/ui/customer/create-customer-modal";
+import { CardList } from "@/app/components/ui/.custom/card-list";
+import { getCustomers, getUser } from "@/app/lib/data";
 
-// export type SortType = {
-//   createdAtAsc: "created_at=asc";
-//   createdAtDesc: "created_at=desc";
-//   ordersQuantityAsc: "orders_quantity=asc";
-//   ordersQuantityesc: "orders_quantity=desc";
-// };
+export default async function Page({ searchParams }: { searchParams: Promise<CardParamsType> }) {
+  const user = await getUser();
 
-export type CustopmerParamsType = { query: string; sort: string };
-
-export default function Page({ searchParams }: { searchParams: Promise<CustopmerParamsType> }) {
   return (
     <div className="space-y-6">
       <div id="header" className="space-y-2">
@@ -23,13 +19,29 @@ export default function Page({ searchParams }: { searchParams: Promise<Custopmer
       </div>
 
       <Card className="relative container min-h-56 max-h-[720px] max-w-2/3 pb-0">
-        <CustomerFilter />
+        <CardAction className="px-6 w-full flex justify-between">
+          <CardFilters
+            filters={[
+              {
+                label: "Дата регистрации",
+                value: "created_at"
+              },
+              {
+                label: "Количество заказов",
+                value: "orders_quantity"
+              }
+            ]}
+          />
+          <fieldset disabled={user?.role === "viewer"}>
+            <CreateCustomerModal />
+          </fieldset>
+        </CardAction>
 
         <Suspense fallback={<CustomerSkeleton />}>
-          <CustomerList params={searchParams} />
+          <CardList params={searchParams} getItems={getCustomers} />
         </Suspense>
 
-        <div className="absolute z-10 bottom-0 right-0 w-full h-12 bg-linear-to-t from-card to-transparent" />
+        <CardBottomGradient />
       </Card>
     </div>
   );

@@ -1,12 +1,14 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/app/components/ui/card";
 import { EditCustomerForm } from "@/app/components/ui/customer/edit-customer-form";
-import { getCustomerById } from "@/app/lib/data";
+import { getCustomerById, getUser } from "@/app/lib/data";
 import { columns } from "../../orders/(table)/columns";
 import { DataTable } from "../../orders/(table)/data-table";
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const customerId = (await params).id;
   const customer = await getCustomerById(customerId);
+
+  const user = await getUser();
 
   return (
     <div className="flex gap-4">
@@ -16,8 +18,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
             <CardTitle>{customer.name}</CardTitle>
             <CardDescription>Просмотр и редактирование карточки клиента</CardDescription>
           </CardHeader>
-
-          <EditCustomerForm customer={customer} />
+          <fieldset disabled={user?.role === "viewer"}>
+            <EditCustomerForm customer={customer} />
+          </fieldset>
         </Card>
 
         <Card className="py-4">
@@ -34,7 +37,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
         </Card>
       </div>
 
-      <div className="flex-1 container">
+      <div className="flex-1">
         <DataTable columns={columns} data={customer.orders} />
       </div>
     </div>

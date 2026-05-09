@@ -1,5 +1,4 @@
 import {
-  CustomerAggregateArgs,
   CustomerFindManyArgs,
   CustomerOrderByWithRelationInput,
   ProductFindManyArgs
@@ -8,9 +7,9 @@ import { prisma } from "./prisma";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 import { MONTH } from "./constants";
 import { auth } from "./auth/auth";
-import { CustopmerParamsType } from "../(admin)/(main)/customers/page";
+import { CardParamsType } from "../components/ui/.custom/card-filters";
 
-// user \\
+// [user] \\
 export const getUser = async () => {
   const session = await auth();
   return session?.user ?? null;
@@ -21,34 +20,32 @@ export const getRevenue = async () => {
   const weekTime = new Date();
   weekTime.setDate(weekTime.getDate() - 7);
 
-  const totalRevenueArgs = {
-    _sum: { total_revenue: true }
-  } satisfies CustomerAggregateArgs<DefaultArgs>;
-
-  const weekRevenueArgs = {
-    where: {
-      created_at: {
-        gte: weekTime
-      }
-    },
-    _sum: { total_revenue: true }
-  } satisfies CustomerAggregateArgs<DefaultArgs>;
-
   const [
     {
       _sum: { total_revenue }
     },
-    {
-      _sum: { total_revenue: week_revenue }
-    }
+    weekOrders
   ] = await Promise.all([
-    prisma.customer.aggregate(totalRevenueArgs),
-    prisma.customer.aggregate(weekRevenueArgs)
+    prisma.customer.aggregate({
+      _sum: { total_revenue: true }
+    }),
+    prisma.order.findMany({
+      where: {
+        created_at: {
+          gte: weekTime
+        }
+      },
+      include: {
+        product: true
+      }
+    })
   ]);
+
+  const week_revenue = weekOrders.reduce((acc, { product }) => (acc += product.price), 0);
 
   return {
     totalRevenue: total_revenue,
-    weekRevenue: week_revenue
+    weekRevenue: week_revenue ?? 0
   };
 };
 
@@ -141,16 +138,23 @@ export const getOrderById = async (id: string) => {
   });
 };
 
+export const getOrders = async () => {
+  return await prisma.order.findMany({
+    include: {
+      customer: { select: { name: true } },
+      product: { select: { price: true } }
+    }
+  });
+};
+
 // customers \\
-export const getCustomers = async (params?: CustopmerParamsType) => {
+export const getCustomers = async (params?: CardParamsType) => {
   const order = params?.sort?.split("=");
   const orderBy = order && ({ [order[0]]: order[1] } as CustomerOrderByWithRelationInput);
 
-  console.log(params?.query);
-
   return await prisma.customer.findMany({
     orderBy: orderBy,
-    where: { name: { contains: params?.query } }
+    where: { name: { contains: params?.query, mode: "insensitive" } }
   });
 };
 
@@ -166,4 +170,19 @@ export const getCustomerById = async (id: string) => {
       }
     }
   });
+};
+
+// content \\
+export const getProducts = async (params?: CardParamsType) => {
+  const order = params?.sort?.split("=");
+  const orderBy = order && ({ [order[0]]: order[1] } as CustomerOrderByWithRelationInput);
+
+  return await prisma.product.findMany({
+    orderBy: orderBy,
+    where: { title: { contains: params?.query, mode: "insensitive" } }
+  });
+};
+
+export const getProductByTitle = async (title: string) => {
+  return await prisma.product.findFirstOrThrow({ where: { title } });
 };

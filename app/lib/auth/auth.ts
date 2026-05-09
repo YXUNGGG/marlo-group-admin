@@ -2,10 +2,10 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "@/auth.config";
 import { z } from "zod";
-import { Prisma } from "@/generated/prisma/client";
+import { Role, User } from "@/generated/prisma/client";
 import { prisma } from "../prisma";
 
-async function getUser(login: string): Promise<Prisma.UserCreateInput | null> {
+async function getUser(login: string): Promise<User | null> {
   try {
     const user = await prisma.user.findFirst({ where: { login } });
     return user;
@@ -24,7 +24,13 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         if (parsedCredentials.success) {
           const { login } = parsedCredentials.data;
           const user = await getUser(login);
-          if (user) return user;
+
+          if (user) {
+            if (user?.is_blocked) {
+              console.log("user was blocked");
+              throw new Error("user_blocked");
+            } else return user;
+          }
         }
 
         console.log("Invalid credentials");
@@ -35,13 +41,22 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.userData = user;
+        token.id = user.id!;
+        token.login = user.login;
+        token.role = user.role;
+        token.is_blocked = user.is_blocked;
       }
       return token;
     },
     async session({ session, token }) {
-      if (token.userData) {
-        session.user = token.userData as any;
+      if (session.user) {
+        session.user = {
+          ...session.user,
+          id: token.id as string,
+          login: token.login as string,
+          role: token.role as Role,
+          is_blocked: token.is_blocked as boolean
+        };
       }
       return session;
     }

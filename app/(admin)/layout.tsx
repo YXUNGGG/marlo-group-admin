@@ -59,16 +59,8 @@ export default async function Layout({ children }: LayoutProps) {
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
-        <header className="h-16 mx-4 flex justify-between items-center">
-          <div className="flex gap-4 items-center">
-            <Separator orientation="vertical" className="h-5" />
-          </div>
-
+        <header className="h-16 mx-4 flex justify-center items-center">
           <HeaderBreadcrumb />
-
-          <Button variant="outline" className="size-9">
-            <BellIcon className="bg-text-secondary" />
-          </Button>
         </header>
 
         <div className="h-full page-container px-4">{children}</div>

@@ -57,7 +57,7 @@ export default function Loading(props: LoadingProps) {
               <CardDescription>Количество заказов</CardDescription>
               <Skeleton className="h-5 w-12" />
             </div>
-            <div className="space-y-1.5 text-end">
+            <div className="space-y-1.5 flex flex-col items-end">
               <CardDescription>Общий чек</CardDescription>
               <Skeleton className="h-5 w-12" />
             </div>
