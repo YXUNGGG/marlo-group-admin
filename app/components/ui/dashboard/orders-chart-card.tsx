@@ -9,7 +9,7 @@ import { use } from "react";
 import { getRecentOrders } from "@/app/lib/data";
 
 type OrdersChartCardProps = {
-  className: string;
+  className?: string;
   chartConfig: ChartConfig;
   recentOrdersUnersolved: ReturnType<typeof getRecentOrders>;
 };
@@ -39,7 +39,7 @@ export function OrdersChartCard({ className, chartConfig, recentOrdersUnersolved
   });
 
   return (
-    <Card className={className}>
+    <Card className={className ?? ""}>
       <CardHeader>
         <CardTitle>Заказы</CardTitle>
         <CardDescription>График заказов за последние 2 месяца</CardDescription>

@@ -8,7 +8,7 @@ import { use } from "react";
 import { getTopPositions } from "@/app/lib/data";
 
 type TopProductCardProps = {
-  className: string;
+  className?: string;
   chartConfig: ChartConfig;
   topProductsUnresolved: ReturnType<typeof getTopPositions>;
 };
@@ -37,7 +37,7 @@ export function TopProductCard({ topProductsUnresolved, chartConfig, className }
   };
 
   return (
-    <Card className={className}>
+    <Card className={className ?? ""}>
       <CardHeader>
         <CardTitle>Востребованные услуги</CardTitle>
         <CardDescription>Рейтинг самых продающихся товаров и услуг</CardDescription>

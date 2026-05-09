@@ -44,7 +44,9 @@ export default function Loading() {
 
           <CardFooter className="flex justify-end pt-6 gap-2">
             <Button variant="outline">Назад</Button>
-            <Button type="submit">Сохранить</Button>
+            <Button type="submit" className="w-34">
+              Сохранить
+            </Button>
           </CardFooter>
         </form>
       </Card>

@@ -2,7 +2,7 @@
 
 import { Badge } from "../badge";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "../card";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "../chart";
+import { ChartConfig, ChartContainer } from "../chart";
 import { Area, AreaChart } from "recharts";
 import { WEEK } from "@/app/lib/constants";
 import { getRecentOrders } from "@/app/lib/data";

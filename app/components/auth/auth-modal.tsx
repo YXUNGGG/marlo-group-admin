@@ -19,8 +19,8 @@ import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 
 export function AuthModal() {
-  const [open, setOpen] = useState(true);
-  const { data: session, update } = useSession();
+  const [open, setOpen] = useState(false);
+  const { data: session, update, status } = useSession();
   const [state, formAction, isPending] = useActionState(authenticate, { message: "", status: "" });
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export function AuthModal() {
 
   useEffect(() => {
     if (session?.user) setOpen(false);
-    else if (!session || !session.user) setOpen(true);
+    else if (!session?.user && status !== "loading") setOpen(true);
   }, [session]);
 
   if (session?.user) return null;
@@ -51,7 +51,7 @@ export function AuthModal() {
           <FieldGroup>
             <Field>
               <Label htmlFor="login">Логин</Label>
-              <Input id="login" name="login" placeholder="login@example.ru" />
+              <Input id="login" name="login" placeholder="Введите логин..." />
             </Field>
           </FieldGroup>
           <DialogFooter>

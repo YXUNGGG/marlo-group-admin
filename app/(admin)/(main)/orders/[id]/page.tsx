@@ -8,7 +8,7 @@ import {
 } from "@/app/components/ui/card";
 import { Field, FieldGroup } from "@/app/components/ui/field";
 import { Input } from "@/app/components/ui/input";
-import { getOrderById } from "@/app/lib/data";
+import { getOrderById, getUser } from "@/app/lib/data";
 import {
   Select,
   SelectContent,
@@ -28,6 +28,8 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
   const orderId = (await params).id;
   const order = await getOrderById(orderId);
 
+  const user = await getUser();
+
   return (
     <div className="space-y-2.5 max-w-[450px]">
       <Card>
@@ -35,61 +37,62 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
           <CardTitle>Редактирование заказа</CardTitle>
           <CardDescription>Просмотр и редактирование карточки заказа</CardDescription>
         </CardHeader>
+        <fieldset disabled={user?.role === "viewer"}>
+          <form action={editOrder}>
+            <CardContent>
+              <FieldGroup>
+                <div className="flex gap-4">
+                  <input readOnly name="id" value={orderId} className="hidden" />
 
-        <form action={editOrder}>
-          <CardContent>
-            <FieldGroup>
-              <div className="flex gap-4">
-                <input readOnly name="id" value={orderId} className="hidden" />
+                  <Field className="flex-3 pointer-events-none">
+                    <Label htmlFor="product">Товар</Label>
+                    <Input value={order.product_title} readOnly className="opacity-80" />
+                  </Field>
 
-                <Field className="flex-3">
-                  <Label htmlFor="product">Товар</Label>
-                  <Input value={order.product_title} readOnly />
+                  <Field className="flex-2">
+                    <Label htmlFor="product">Статус</Label>
+                    <Select defaultValue={order.status} name="status">
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        <SelectGroup>
+                          {statuses.map(option => (
+                            <SelectItem key={option.value} value={option.value} title={option.label}>
+                              <div className={`size-3 rounded-2xl ${option.color}`} />
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                </div>
+
+                <Field>
+                  <Label htmlFor="note">Комментарий к заказу</Label>
+                  <Textarea
+                    id="note"
+                    name="note"
+                    className="min-h-27"
+                    defaultValue={order.note ?? undefined}
+                    placeholder="Оставьте комментарий к заказу..."
+                  />
                 </Field>
+              </FieldGroup>
+            </CardContent>
 
-                <Field className="flex-2">
-                  <Label htmlFor="product">Статус</Label>
-                  <Select defaultValue={order.status} name="status">
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                      <SelectGroup>
-                        {statuses.map(option => (
-                          <SelectItem key={option.value} value={option.value} title={option.label}>
-                            <div className={`size-3 rounded-2xl ${option.color}`} />
-                            {option.label}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </Field>
-              </div>
-
-              <Field>
-                <Label htmlFor="note">Комментарий к заказу</Label>
-                <Textarea
-                  id="note"
-                  name="note"
-                  className="min-h-27"
-                  defaultValue={order.note ?? undefined}
-                  placeholder="Оставьте комментарий к заказу..."
-                />
-              </Field>
-            </FieldGroup>
-          </CardContent>
-
-          <CardFooter className="flex justify-end pt-6 gap-2">
-            <Link href="/orders">
-              <Button variant="outline">Назад</Button>
-            </Link>
-            <Button type="submit" className="w-34">
-              Сохранить
-            </Button>
-          </CardFooter>
-        </form>
+            <CardFooter className="flex justify-end pt-6 gap-2">
+              <Link href="/orders">
+                <Button variant="outline">Назад</Button>
+              </Link>
+              <Button type="submit" className="w-34">
+                Сохранить
+              </Button>
+            </CardFooter>
+          </form>
+        </fieldset>
       </Card>
 
       <Card className="py-4">

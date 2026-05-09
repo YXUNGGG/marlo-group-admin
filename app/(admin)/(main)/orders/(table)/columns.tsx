@@ -1,30 +1,15 @@
 "use client";
 
-import { Order, OrderStatus } from "@/generated/prisma/client";
+import { Order } from "@/generated/prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 
-import { ChevronsUpDownIcon, Edit, InfoIcon, MoreHorizontal, Trash2Icon } from "lucide-react";
+import { ChevronsUpDownIcon } from "lucide-react";
 import { Button } from "@/app/components/ui/button";
 import { Checkbox } from "@/app/components/ui/checkbox";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger
-} from "@/app/components/ui/dropdown-menu";
-import { formatTime } from "@/app/lib/utils";
+import { TableActionsCell } from "./table-actions-cell";
 import { StatusBadge } from "@/app/components/ui/status-badge";
-import Link from "next/link";
-import { changeOrderStatus } from "@/app/lib/actions";
-import { DeleteOrderModal } from "@/app/components/ui/orders/delete-order-modal";
-import { DialogTrigger } from "@/app/components/ui/dialog";
-import { statuses } from "./data";
+import { formatTime } from "@/app/lib/utils";
 
 export const columns: ColumnDef<Order>[] = [
   {
@@ -93,62 +78,6 @@ export const columns: ColumnDef<Order>[] = [
   },
   {
     id: "actions",
-    cell: ({ row, table }) => {
-      const order = row.original;
-      const selectedRows = table.getSelectedRowModel().rows;
-      const selectedOrders = selectedRows.map(row => row.original);
-      const orderIds = selectedOrders.map(order => order.id);
-
-      return (
-        <DeleteOrderModal orderData={selectedOrders.length ? selectedOrders : [order]}>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">О заказе</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent align="end">
-              <Link href={`/orders/${order.id}`}>
-                <DropdownMenuItem>
-                  <Edit /> Редактировать
-                </DropdownMenuItem>
-              </Link>
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  <InfoIcon /> Статус
-                </DropdownMenuSubTrigger>
-                <DropdownMenuPortal>
-                  <DropdownMenuSubContent>
-                    {statuses.map(option => (
-                      <DropdownMenuItem
-                        key={option.value}
-                        onClick={async () => {
-                          const updatedStatus = option.value as OrderStatus;
-                          const data = (orderIds.length ? orderIds : [order]) as string[];
-                          await changeOrderStatus(data, updatedStatus);
-                        }}
-                      >
-                        <div className={`size-3 rounded-2xl ${option.color}`} />
-                        {option.label}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuSubContent>
-                </DropdownMenuPortal>
-              </DropdownMenuSub>
-
-              <DropdownMenuSeparator />
-
-              <DialogTrigger asChild>
-                <DropdownMenuItem variant="destructive">
-                  <Trash2Icon /> Удалить заказ
-                </DropdownMenuItem>
-              </DialogTrigger>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </DeleteOrderModal>
-      );
-    }
+    cell: ({ row, table }) => <TableActionsCell row={row} table={table} />
   }
 ];

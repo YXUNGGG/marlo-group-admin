@@ -6,12 +6,13 @@ import Link from "next/link";
 import { Textarea } from "@/app/components/ui/textarea";
 import { Label } from "@/app/components/ui/label";
 import { Button } from "@/app/components/ui/button";
-import { editCustomer } from "@/app/lib/actions";
+import { deleteCustomer, editCustomer } from "@/app/lib/actions";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/app/components/ui/input-group";
 import { CardContent, CardFooter } from "../card";
 import { Customer } from "@/generated/prisma/client";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
+import { DeleteModal } from "../.custom/delete-modal";
 
 type EditCustomerFormProps = {
   customer: Customer;
@@ -90,13 +91,17 @@ export function EditCustomerForm({ customer }: EditCustomerFormProps) {
         </FieldGroup>
       </CardContent>
 
-      <CardFooter className="flex justify-end pt-6 gap-2">
-        <Link href="/orders">
-          <Button variant="outline">Назад</Button>
-        </Link>
-        <Button type="submit" className="w-34">
-          Сохранить
-        </Button>
+      <CardFooter className="flex justify-between pt-6">
+        <DeleteModal id={customer.id} deleteAction={deleteCustomer} itemTitle="клиента" />
+
+        <div className="flex gap-2">
+          <Link href="/customers">
+            <Button variant="outline">Назад</Button>
+          </Link>
+          <Button type="submit" className="w-34">
+            Сохранить
+          </Button>
+        </div>
       </CardFooter>
     </form>
   );

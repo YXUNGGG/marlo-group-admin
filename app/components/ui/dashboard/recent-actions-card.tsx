@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ca
 import { formatTime } from "@/app/lib/utils";
 import { prisma } from "@/app/lib/prisma";
 import { Separator } from "../separator";
+import { CardBottomGradient } from "../.custom/card-bottom-gradient";
 
 type RecentActionsCardProps = {
   className: string;
@@ -43,7 +44,6 @@ export default async function RecentActionsCard({ className }: RecentActionsCard
         <CardDescription>Последняя активность команды</CardDescription>
       </CardHeader>
 
-      <div className="absolute z-10 bottom-0 right-0 w-full h-12 bg-linear-to-t from-card to-transparent" />
       <CardContent className="h-full overflow-y-auto scroll-">
         {recentActions.map(action => (
           <div key={action.id}>
@@ -77,6 +77,8 @@ export default async function RecentActionsCard({ className }: RecentActionsCard
           </div>
         ))}
       </CardContent>
+
+      <CardBottomGradient />
     </Card>
   );
 }

@@ -13,11 +13,10 @@ import {
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
-import { deleteOrder } from "@/app/lib/actions";
-import { Order } from "@/generated/prisma/client";
+import { deleteOrder, fullOrder } from "@/app/lib/actions";
 
 type DeleteOrderModalType = {
-  orderData: Order[];
+  orderData: fullOrder[];
   children: React.ReactNode;
 };
 
@@ -42,7 +41,7 @@ export function DeleteOrderModal({ orderData, children }: DeleteOrderModalType) 
     <Dialog open={open} onOpenChange={setOpen}>
       {children}
 
-      <DialogContent className="sm:max-w-xs" showCloseButton={false}>
+      <DialogContent className="sm:max-w-xs">
         <DialogHeader>
           <DialogTitle>Удалить заказ</DialogTitle>
           <DialogDescription>

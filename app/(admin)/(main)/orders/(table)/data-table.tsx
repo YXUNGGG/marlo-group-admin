@@ -14,13 +14,12 @@ import {
   getFacetedUniqueValues
 } from "@tanstack/react-table";
 
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { DataTablePagination } from "./pagination-interface";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/app/components/ui/table";
 import { ColumnFilter, SearchFilter } from "./filters";
-import { CreateOrderModal } from "@/app/components/ui/orders/create-order-modal";
-import { Skeleton } from "@/app/components/ui/skeleton";
 import { statuses } from "./data";
+import { CreateOrderModal } from "@/app/components/ui/orders/create-order-modal";
 
 interface DataTableProps<TData, TValue> {
   data: TData[];
@@ -40,8 +39,8 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function DataTable<TData, TValue>({
-  columns,
   data,
+  columns,
   createOrderData,
   includeTableActions = false
 }: DataTableProps<TData, TValue>) {
@@ -74,9 +73,7 @@ export function DataTable<TData, TValue>({
         <ColumnFilter title="Фильтр по статусу" options={statuses} column={table.getColumn("status")} />
       </div>
 
-      <Suspense fallback={<Skeleton className="h-8 w-32" />}>
-        {createOrderData && <CreateOrderModal createOrderData={createOrderData} />}
-      </Suspense>
+      {createOrderData && <CreateOrderModal createOrderData={createOrderData} />}
     </div>
   );
 

@@ -16,7 +16,7 @@ export function HeaderBreadcrumb() {
   const currentPage = PAGES.find(({ href }) => path.includes(href));
   const lastParam = path.split("/").pop();
   const idPage = lastParam !== currentPage?.href.slice(1) && lastParam;
-  const crumbs = [currentPage?.category, currentPage?.name, idPage].filter(Boolean);
+  const crumbs = [currentPage?.category, currentPage?.name, decodeURI(idPage || "")].filter(Boolean);
 
   return (
     <Breadcrumb>

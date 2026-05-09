@@ -23,12 +23,13 @@ import {
   SelectTrigger,
   SelectValue
 } from "../select";
-import { use, useActionState, useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useState } from "react";
 import { Spinner } from "../spinner";
-import { toast } from "sonner";
 import { Textarea } from "../textarea";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "../input-group";
 import { LockKeyholeIcon } from "lucide-react";
+import { useCreateModalState } from "@/app/hooks/use-create-modal-state";
+import { useSession } from "next-auth/react";
 
 type CreateOrderModalType = {
   createOrderData: Promise<{
@@ -45,26 +46,27 @@ type CreateOrderModalType = {
 };
 
 export function CreateOrderModal({ createOrderData }: CreateOrderModalType) {
-  const [selectedProduct, setSelectedProduct] = useState<string>("");
+  const { data } = useSession();
+  const [open, setOpen] = useState(false);
   const { customers, products } = use(createOrderData);
-  const [state, formAction, isPending] = useActionState(createOrder, { message: "", status: "" });
-
-  useEffect(() => {
-    if (!state.message) return;
-    state.status === "error"
-      ? toast.error(state.message)
-      : toast.success(state.message, { description: state?.description });
-  }, [state]);
+  const { formAction, isPending } = useCreateModalState(createOrder);
+  const [selectedProduct, setSelectedProduct] = useState<string>("");
 
   const selectedProductPrice: number = useMemo(() => {
     const product = products.find(pr => pr.title === selectedProduct);
     return product?.price ?? 0;
   }, [selectedProduct]);
 
+  useEffect(() => {
+    if (!open) setSelectedProduct("");
+  }, [open]);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Добавить заказ</Button>
+        <fieldset disabled={data?.user.role === "viewer"}>
+          <Button>Добавить заказ</Button>
+        </fieldset>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <form action={formAction} className="contents">
@@ -107,7 +109,7 @@ export function CreateOrderModal({ createOrderData }: CreateOrderModalType) {
                 </Select>
               </Field>
 
-              <Field className="flex-1">
+              <Field className="flex-1 pointer-events-none">
                 <Label htmlFor="price">Сумма</Label>
                 <InputGroup>
                   <InputGroupInput id="price" value={selectedProductPrice} readOnly />

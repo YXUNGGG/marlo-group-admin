@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { changeUserRole } from "@/app/lib/actions";
+import { changeUserRole, toggleUserIsBlocked } from "@/app/lib/actions";
 import { Prisma, Role } from "@/generated/prisma/client";
 import {
   Select,
@@ -23,7 +23,9 @@ type UserRoleSelectProps = {
 export function UserListItemActions({ id, user }: UserRoleSelectProps) {
   const session = useSession().data;
   const currentUser = session?.user;
+  const isDisabled = currentUser?.id === user.id;
   const [role, setRole] = useState<Role>(user.role);
+  const [isBlocked, setIsBlocked] = useState(user.is_blocked);
 
   const UserRoleSelect = (
     <Select
@@ -48,13 +50,33 @@ export function UserListItemActions({ id, user }: UserRoleSelectProps) {
   );
 
   const UserBlockButton = (
-    <Button disabled={role === "editor" || currentUser?.id === user.id} variant="destructive">
+    <Button
+      disabled={isDisabled}
+      variant="destructive"
+      onClick={async () => {
+        setIsBlocked(true);
+        toggleUserIsBlocked(user.id, true);
+      }}
+    >
       Заблокировать
+    </Button>
+  );
+
+  const UserUnblockButton = (
+    <Button
+      disabled={isDisabled}
+      variant="secondary"
+      onClick={async () => {
+        setIsBlocked(false);
+        toggleUserIsBlocked(user.id, false);
+      }}
+    >
+      Разблокировать
     </Button>
   );
 
   return {
     UserRoleSelect,
-    UserBlockButton
+    UserBlockButton: isBlocked ? UserUnblockButton : UserBlockButton
   };
 }

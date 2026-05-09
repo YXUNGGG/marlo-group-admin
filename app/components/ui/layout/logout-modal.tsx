@@ -21,10 +21,11 @@ export function LogoutModal() {
 
   if (!session?.user) return null;
 
-  const handleLogout = async () => {
-    try {
-      await signOut({ redirect: false });
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
 
+    try {
+      signOut({ redirect: false });
       setOpen(false);
       toast.success("Выход произведен успешно");
     } catch (error) {

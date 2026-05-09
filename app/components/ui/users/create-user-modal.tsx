@@ -84,7 +84,7 @@ export function CreateUserModal() {
 
             {isPending ? (
               <Button disabled className="w-full">
-                <Spinner /> Создание пользователя
+                <Spinner /> Создание
               </Button>
             ) : (
               <Button type="submit">Создать пользователя</Button>
