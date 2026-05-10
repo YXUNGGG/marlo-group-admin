@@ -51,7 +51,7 @@ export function AuthModal() {
           <FieldGroup>
             <Field>
               <Label htmlFor="login">Логин</Label>
-              <Input id="login" name="login" placeholder="Введите логин..." />
+              <Input id="login" name="login" placeholder="Введите логин..." required />
             </Field>
           </FieldGroup>
           <DialogFooter>
