@@ -1,13 +1,9 @@
-import {
-  CustomerFindManyArgs,
-  CustomerOrderByWithRelationInput,
-  ProductFindManyArgs
-} from "@/generated/prisma/models";
 import { prisma } from "./prisma";
 import { DefaultArgs } from "@prisma/client/runtime/library";
 import { MONTH } from "./constants";
 import { auth } from "./auth/auth";
 import { CardParamsType } from "../components/ui/.custom/card-filters";
+import { Prisma } from "@prisma/client";
 
 // [user] \\
 export const getUser = async () => {
@@ -79,7 +75,7 @@ export const getTopPositions = async () => {
       name: true,
       total_revenue: true
     }
-  } satisfies CustomerFindManyArgs<DefaultArgs>;
+  } satisfies Prisma.CustomerFindManyArgs<DefaultArgs>;
 
   const topProductsArgs = {
     orderBy: { orders: { _count: "desc" } },
@@ -91,7 +87,7 @@ export const getTopPositions = async () => {
         select: { created_at: true }
       }
     }
-  } satisfies ProductFindManyArgs;
+  } satisfies Prisma.ProductFindManyArgs;
 
   const [topCustomers, topProducts] = await Promise.all([
     prisma.customer.findMany(topCustomersArgs),
@@ -150,7 +146,7 @@ export const getOrders = async () => {
 // customers \\
 export const getCustomers = async (params?: CardParamsType) => {
   const order = params?.sort?.split("=");
-  const orderBy = order && ({ [order[0]]: order[1] } as CustomerOrderByWithRelationInput);
+  const orderBy = order && ({ [order[0]]: order[1] } as Prisma.CustomerOrderByWithRelationInput);
 
   return await prisma.customer.findMany({
     orderBy: orderBy,
@@ -175,7 +171,7 @@ export const getCustomerById = async (id: string) => {
 // content \\
 export const getProducts = async (params?: CardParamsType) => {
   const order = params?.sort?.split("=");
-  const orderBy = order && ({ [order[0]]: order[1] } as CustomerOrderByWithRelationInput);
+  const orderBy = order && ({ [order[0]]: order[1] } as Prisma.CustomerOrderByWithRelationInput);
 
   return await prisma.product.findMany({
     orderBy: orderBy,

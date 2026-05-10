@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "@/auth.config";
 import { z } from "zod";
-import { Role, User } from "@/generated/prisma/client";
+import { Role, User } from "@prisma/client";
 import { prisma } from "../prisma";
 
 async function getUser(login: string): Promise<User | null> {

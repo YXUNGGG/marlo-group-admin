@@ -3,7 +3,7 @@ import { CardContent } from "../card";
 import { Separator } from "../separator";
 import { CardParamsType } from "./card-filters";
 import { CardListItem } from "./card-list-item";
-import { Customer, Product } from "@/generated/prisma/client";
+import { Customer, Product } from "@prisma/client";
 
 type CardListProps = {
   params: Promise<CardParamsType>;

@@ -1,6 +1,6 @@
 "use client";
 
-import { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@prisma/client";
 import { formatTime } from "@/app/lib/utils";
 import { Input } from "@/app/components/ui/input";
 import { Field, FieldGroup, FieldLabel, FieldSet } from "@/app/components/ui/field";

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { changeUserRole, toggleUserIsBlocked } from "@/app/lib/actions";
-import { Prisma, Role } from "@/generated/prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import {
   Select,
   SelectContent,

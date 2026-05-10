@@ -1,6 +1,6 @@
 "use client";
 
-import { Order } from "@/generated/prisma/client";
+import { Order } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 
 import { ChevronsUpDownIcon } from "lucide-react";

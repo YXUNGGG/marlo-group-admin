@@ -1,6 +1,5 @@
 "use server";
 
-import { OrderStatus, Role } from "@/generated/prisma/enums";
 import { prisma } from "./prisma";
 import { AuthError } from "next-auth";
 import { auth, signIn } from "./auth/auth";
@@ -14,6 +13,7 @@ import {
 } from "./dto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { OrderStatus, Role } from "@prisma/client";
 
 export type ResponseType = {
   status: string;

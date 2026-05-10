@@ -1,6 +1,5 @@
 import "dotenv/config";
-import { OrderStatus, PrismaClient } from "@/generated/prisma/client";
-import { OrderCreateManyInput } from "@/generated/prisma/models";
+import { OrderStatus, PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -86,7 +85,7 @@ async function seed() {
   await prisma.product.createMany({ data: productData });
   await prisma.customer.createMany({ data: customerData });
 
-  const ordersData = async (): Promise<OrderCreateManyInput[]> => {
+  const ordersData = async (): Promise<Prisma.OrderCreateManyInput[]> => {
     const orders = [];
 
     for (let i = 0; i < 20; i++) {

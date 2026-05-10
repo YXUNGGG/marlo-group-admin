@@ -9,7 +9,7 @@ import { Button } from "@/app/components/ui/button";
 import { deleteCustomer, editCustomer } from "@/app/lib/actions";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/app/components/ui/input-group";
 import { CardContent, CardFooter } from "../card";
-import { Customer } from "@/generated/prisma/client";
+import { Customer } from "@prisma/client";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { DeleteModal } from "../.custom/delete-modal";

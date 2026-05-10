@@ -1,6 +1,6 @@
 "use client";
 
-import { OrderStatus } from "@/generated/prisma/enums";
+import { OrderStatus } from "@prisma/client";
 import { Row, Table } from "@tanstack/react-table";
 import {
   DropdownMenu,
