@@ -1,6 +1,6 @@
 {
   "name": "marlo-group-admin",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "type": "module",
   "private": false,
   "scripts": {
